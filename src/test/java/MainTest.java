@@ -1,7 +1,4 @@
-import LanguagesAndExceptions.CompanyIsInBlackListException;
-import LanguagesAndExceptions.Language;
-import LanguagesAndExceptions.NoAvailablePackageException;
-import LanguagesAndExceptions.PackageAlreadyExistException;
+import LanguagesAndExceptions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +10,8 @@ import java.util.List;
 public class MainTest {
     @Test
     public void check_flex_package_price_when_company_send_notification_to_group(){
-        Company company = new Company("TR");
+        Language language_TR = new Turkish();
+        Company company = new Company(language_TR);
         company.purchaseFlexEmailPackage();
         NotificationDTO notification = createNotificationWith("email");
         NotificationGroup group = company.createNotificationGroupWith(createUsersWith(3000));
@@ -25,7 +23,8 @@ public class MainTest {
     @Test
     public void check_fixed_package_price_when_company_send_notification_to_group(){
         //Given
-        Company company = new Company("TR");
+        Language language_TR = new Turkish();
+        Company company = new Company(language_TR);
         company.purchaseFixedSmsPackage();
         NotificationDTO notification = createNotificationWith("sms");
         NotificationGroup group = company.createNotificationGroupWith(createUsersWith(1650));
@@ -38,7 +37,8 @@ public class MainTest {
     public void company_send_notification_when_in_blacklist_should_throw_exception(){
         //Given
         String exceptionMessage = null;
-        Company company = new Company("TR");
+        Language language_TR = new Turkish();
+        Company company = new Company(language_TR);
         Language language = company.getLanguage();
         User user = new User();
         //When
@@ -53,7 +53,8 @@ public class MainTest {
     public void company_can_not_have_packages_with_same_type_should_throw_exception(){
         //Given
         String exceptionMessage = null;
-        Company company = new Company("TR");
+        Language language_TR = new Turkish();
+        Company company = new Company(language_TR);
         Language turkish = company.getLanguage();
         company.purchaseFixedSmsPackage();
         //When
@@ -66,7 +67,8 @@ public class MainTest {
     public void company_send_notification_when_no_package_available_should_throw_exception(){
         //Given
         String exceptionMessage = null;
-        Company company = new Company("TR");
+        Language language_TR = new Turkish();
+        Company company = new Company(language_TR);
         Language turkish = company.getLanguage();
         User user = new User();
         //When
@@ -78,7 +80,8 @@ public class MainTest {
     @Test
     public void after_one_month_fixed_package_should_renew(){
         //Given
-        Company company = new Company("EN");
+        Language language_TR = new Turkish();
+        Company company = new Company(language_TR);
         company.purchaseFixedSmsPackage();
         Package pack = company.getPackages().get(0);
         sendPreparedNotifications(company,145,"sms");

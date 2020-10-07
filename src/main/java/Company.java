@@ -10,17 +10,13 @@ public class Company{
     private double totalCostOfPackages;
     private Language language;
 
-    public Company(String language) {
+    public Company(Language language) {
         this.packages = new ArrayList<>();
         this.totalCostOfPackages = 0;
         this.inBlackList = false;
-        setLanguage(language);
+        this.language = language;
     }
 
-    public void setLanguage(String languageCode){
-        if(languageCode.equals("TR")){ language = new Turkish(); }
-        if(languageCode.equals("EN")){ language = new English(); }
-    }
     public boolean isPackageAlreadyExistWith(String type){
        if(getProperPackagesAccordingToNotification(type).isEmpty()){ return false; }
        return true;
