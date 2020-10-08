@@ -2,10 +2,13 @@ import LanguagesAndExceptions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class MainTest {
     @Test
@@ -44,10 +47,11 @@ public class MainTest {
         //When
         company.purchaseFixedSmsPackage();
         company.setInBlackList(true);
-        try { company.send(createNotificationWith("sms"),user);
-        }catch (Exception e){ exceptionMessage = e.getMessage(); }
+        Throwable throwable = catchThrowable(() ->  company.send(createNotificationWith("sms"),user));
         //Then
-        Assertions.assertEquals(new CompanyIsInBlackListException(language).getMessage(),exceptionMessage);
+        assertThat(throwable).isNotNull();
+        assertThat(throwable).isInstanceOf(CompanyIsInBlackListException.class);
+        assertThat(throwable).hasMessageContaining("Şirket kara listede !");
     }
     @Test
     public void company_can_not_have_packages_with_same_type_should_throw_exception(){
@@ -58,10 +62,11 @@ public class MainTest {
         Language turkish = company.getLanguage();
         company.purchaseFixedSmsPackage();
         //When
-        try { company.purchaseFlexSmsPackage();
-        } catch (Exception e){ exceptionMessage = e.getMessage(); }
+        Throwable throwable = catchThrowable(() -> company.purchaseFixedSmsPackage());
         //Then
-        Assertions.assertEquals(new PackageAlreadyExistException(turkish).getMessage(),exceptionMessage);
+        assertThat(throwable).isNotNull();
+        assertThat(throwable).isInstanceOf(PackageAlreadyExistException.class);
+        assertThat(throwable).hasMessageContaining("Bu paket zaten kullanımda !");
     }
     @Test
     public void company_send_notification_when_no_package_available_should_throw_exception(){
@@ -72,10 +77,11 @@ public class MainTest {
         Language turkish = company.getLanguage();
         User user = new User();
         //When
-        try { company.send(createNotificationWith("sms"),user);
-        }catch (Exception e){ exceptionMessage = e.getMessage(); }
+        Throwable throwable = catchThrowable(() -> company.send(createNotificationWith("sms"),user));
         //Then
-        Assertions.assertEquals(new NoAvailablePackageException(turkish).getMessage(),exceptionMessage);
+        assertThat(throwable).isNotNull();
+        assertThat(throwable).isInstanceOf(NoAvailablePackageException.class);
+        assertThat(throwable).hasMessageContaining("Uygun paket bulunamadı !");
     }
     @Test
     public void after_one_month_fixed_package_should_renew(){
